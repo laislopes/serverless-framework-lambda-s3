@@ -1,0 +1,27 @@
+service: serverless-framework-2-lambda
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+
+functions:
+  simulatingCSVUpload:
+    handler: index.simulatingCSVUpload
+    events:
+      - httpApi:
+          path: /students/batch
+          method: post
+
+  addStudents:
+    handler: index.addStudents
+    events:
+      - s3: 
+          bucket: students-csv-local
+          event: s3:ObjectCreated:*
+          rules: 
+            - suffix: .csv
+
+plugins:
+  - serverless-offline
+  - serverless-s3-local
