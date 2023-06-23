@@ -7,14 +7,14 @@ provider:
 
 functions:
   simulatingCSVUpload:
-    handler: index.simulatingCSVUpload
+    handler: register_batch/local/index.simulatingCSVUpload
     events:
       - httpApi:
           path: /students/batch
           method: post
 
   addStudents:
-    handler: index.addStudents
+    handler: register_batch/local/index.registerStudents
     events:
       - s3: 
           bucket: students-csv-local
