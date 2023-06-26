@@ -1,3 +1,5 @@
+const { convertCSVData } = require("../convertCSVData");
+const { registerStudentsIntoDatabase } = require("../registerStudentsIntoDatabase");
 const { uploadingToBucket, getCSVDataFromBucket } = require("./s3Server");
 
 module.exports.simulatingCSVUpload = async (event) => {
@@ -19,12 +21,20 @@ module.exports.simulatingCSVUpload = async (event) => {
 }
 
 module.exports.registerStudents = async (event) => {
-  const s3Event = event.Records[0].s3;
+  try {
+    const s3Event = event.Records[0].s3;
+  
+    const bucketName = s3Event.bucket.name;
+    const bucketKey = decodeURIComponent(s3Event.object.key.replace(/\+/g, " "));
+  
+    const fileData = await getCSVDataFromBucket(bucketName, bucketKey);
+  
+    const students = await convertCSVData(fileData);
 
-  const bucketName = s3Event.bucket.name;
-  const bucketKey = decodeURIComponent(s3Event.object.key.replace(/\+/g, " "));
+    await registerStudentsIntoDatabase(students);
 
-  const fileData = await getCSVDataFromBucket(bucketName, bucketKey);
-
-  console.log(fileData);
+    console.log("Students registered successfully!");
+  } catch (error) {
+    console.log(error);
+  }
 };
