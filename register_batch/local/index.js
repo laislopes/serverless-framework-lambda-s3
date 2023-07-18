@@ -20,7 +20,7 @@ module.exports.simulatingCSVUpload = async (event) => {
   }
 }
 
-module.exports.registerStudents = async (event) => {
+module.exports.registerStudentsFromLocalBucket = async (event) => {
   try {
     const s3Event = event.Records[0].s3;
   

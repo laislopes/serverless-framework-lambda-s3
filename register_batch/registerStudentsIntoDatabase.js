@@ -1,6 +1,8 @@
+const BASE_URL = process.env.API_BASE_URL;
+
 async function registerStudentsIntoDatabase(students) {
      const studentsPromises = students.map((student) => {
-        return fetch("http://curso-serverless2-api-279557079.us-east-1.elb.amazonaws.com/alunos", {
+        return fetch(`${BASE_URL}/alunos`, {
             method: "POST",
             headers: { "Content-Type": "application/json"},
             body: JSON.stringify(student)
